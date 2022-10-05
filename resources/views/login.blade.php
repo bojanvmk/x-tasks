@@ -8,7 +8,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-
-test
+<div id="app">
+    <login-form/>
+</div>
 </body>
 </html>
