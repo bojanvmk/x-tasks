@@ -24,6 +24,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $appends = [
+        'username'
+    ];
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
@@ -36,5 +40,10 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->role->name === ROLE::ADMIN;
+    }
+
+    public function getUsernameAttribute(): string
+    {
+        return $this->email;
     }
 }

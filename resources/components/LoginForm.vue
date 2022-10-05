@@ -15,6 +15,10 @@
                                class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600">
                     </div>
 
+                    <div class="mt-4" v-for="fieldErrors in validationErrors">
+                        <p v-for="error in fieldErrors" v-text="error"></p>
+                    </div>
+
                     <div class="flex items-baseline justify-between">
                         <button type="button" @click.prevent="login()" class="px-6 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900">Login</button>
                     </div>
@@ -33,13 +37,19 @@ export default {
                 email: '',
                 password: ''
             },
+            validationErrors: {},
+            genericError: 'There was an error. Please try again.'
         };
     },
     methods: {
         login(){
             axios.get('/sanctum/csrf-cookie')
                 .then(() => axios.post('/login', this.credentials))
-                .then(() => window.location.replace('dashboard'));
+                .then(() => window.location.replace('dashboard'))
+                .catch(({response}) => {
+                    this.validationErrors = response?.status === 422 ? response.data.errors : [this.genericError];
+
+                });
         }
     }
 };
