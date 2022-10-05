@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,4 +26,5 @@ Route::post('login', [LoginController::class, 'login']);
 Route::middleware(['auth'])->group(function() {
     Route::post('logout', [LoginController::class, 'logout']);
     Route::get('dashboard', [DashboardController::class, 'view'])->name('dashboard');
+    Route::resource('tasks', TaskController::class)->except(['destroy']);
 });

@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Role;
+use App\Models\Task;
+use App\Models\TaskStatus;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -21,7 +22,7 @@ class DatabaseSeeder extends Seeder
             ]
         ]);
 
-        User::factory()->createMany([
+        $users = User::factory()->createMany([
             [
                 'name'     => 'Admin',
                 'role_id'  => $roles->firstWhere('name', 'admin')->getKey(),
@@ -35,5 +36,24 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('Secret!'),
             ],
         ]);
+
+        TaskStatus::factory()->createMany([
+            [
+                'name' => 'opened',
+            ],
+            [
+                'name' => 'completed',
+            ],
+            [
+                'name' => 'cancelled',
+            ]
+        ]);
+
+        $tasks = Task::factory()->count(10)->create();
+
+        /** @var Task $task */
+        foreach ($tasks as $task) {
+            $task->users()->attach($users->random()->getKey());
+        }
     }
 }
